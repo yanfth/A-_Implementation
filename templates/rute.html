@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Rute Logistik Shopee Express</title>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container" style="max-width: 1400px;">
+        <a href="/" class="btn-back">← Kembali ke Form Parameter</a>
+        <header style="text-align: left;">
+            <h1>Hasil Komparasi <span>Alokasi Rute</span></h1>
+            <p>Strategi Pengiriman Berdasarkan Parameter: <strong>{{ optimasi.upper() }}</strong></p>
+        </header>
+        
+        <div class="layout-grid">
+            <div class="sidebar">
+                <!-- A-STAR SUMMARY -->
+                <div class="metrics-box" style="border-left-color: #f97316;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: #f97316;">Algoritma A* (Informatif Heuristik)</h3>
+                        <span class="badge-speed" style="background-color: rgba(249,115,22,0.1); color: #f97316;">{{ waktu_astar }} ms</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Total Jarak</span>
+                        <span>{{ astar.jarak }} KM</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Estimasi Waktu</span>
+                        <span>{{ astar.waktu }} Jam</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Tarif Tol Armada</span>
+                        <span>Rp {{ "{:,}".format(astar.tol) }}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Konsumsi BBM</span>
+                        <span>Rp {{ "{:,}".format(astar.bbm) }}</span>
+                    </div>
+                    <div class="metric-row" style="border-top: 1px solid #1e293b; padding-top: 10px; margin-top: 10px; font-size: 1.1rem;">
+                        <span style="color: #fff;">TOTAL OPERATIONAL COST</span>
+                        <span style="color: #10b981;">Rp {{ "{:,}".format(astar.biaya_total) }}</span>
+                    </div>
+                </div>
+                
+                <!-- DIJKSTRA SUMMARY -->
+                <div class="metrics-box" style="border-left-color: #64748b; opacity: 0.85;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: #cbd5e1;">Algoritma Dijkstra (Blind Search)</h3>
+                        <span class="badge-speed" style="color:#cbd5e1; background:rgba(255,255,255,0.05)">{{ waktu_dijkstra }} ms</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Total Jarak</span>
+                        <span>{{ dijkstra.jarak }} KM</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Estimasi Waktu</span>
+                        <span>{{ dijkstra.waktu }} Jam</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Total Biaya Operasional</span>
+                        <span>Rp {{ "{:,}".format(dijkstra.biaya_total) }}</span>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 20px; font-size: 0.9rem;">
+                    <h4 style="color: #f97316; margin-bottom: 8px;">Catatan Evaluasi Akademis</h4>
+                    <p style="color: #64748b; font-size: 0.85rem;">
+                        Node dalam jaringan merepresentasikan pusat sortir logistik riil Shopee Express. Pemilihan rute mempertimbangkan pembobotan biaya dinamis untuk armada angkutan berat.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="map-wrapper">
+                <iframe src="/peta_render?asal={{ asal }}&tujuan={{ tujuan }}&path_astar={{ ','.join(astar.path) }}&path_dijkstra={{ ','.join(dijkstra.path) }}"></iframe>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

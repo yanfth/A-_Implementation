@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopee Express Route Optimization</title>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Shopee Express <span>Route Optimizer</span></h1>
+            <p>Analisis Jaringan Distribusi Lintas Provinsi Jakarta ke Hub Osowilangun / Gresik</p>
+        </header>
+
+        <main style="max-width: 600px; margin: 0 auto;">
+            <div class="card">
+                <form action="/hitung" method="POST">
+                    <div class="form-group">
+                        <label for="asal">Pilih Origin Sorting Center (Jakarta):</label>
+                        <select name="asal" id="asal">
+                            {% for opt in asal_options %}
+                            <option value="{{ opt }}">{{ opt.replace('_', ' ') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tujuan">Pilih Destination Distribution Center:</label>
+                        <select name="tujuan" id="tujuan">
+                            {% for opt in tujuan_options %}
+                            <option value="{{ opt }}">{{ opt.replace('_', ' ') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kriteria Optimasi Jaringan AI:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="optimasi" value="waktu" checked> Prioritas Waktu Tempuh (Jalur
+                                Tol)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="optimasi" value="biaya"> Prioritas Total Biaya (BBM + Tol)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Simulasi Kondisi Lalu Lintas Jalan:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="lalin" value="lancar" checked> Lancar (Normal)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="lalin" value="macet"> Padat Merayap / Macet (Kecepatan -50%)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px; margin-bottom: 25px;">
+                        <label>Kondisi Antrean Barang di Drop Center (Node):</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="gudang" value="normal" checked> Normal (Sesuai Kapasitas)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gudang" value="padat"> Overload / Penumpukan (+2 Jam & +Rp500k
+                                per Node)
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">HITUNG RUTE LOGISTIK</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
