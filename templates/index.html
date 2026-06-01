@@ -1,85 +1,191 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopee Express Route Optimization</title>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { font-family: 'Urbanist', sans-serif; background-color: #0f172a; color: #fff; margin: 0; padding: 20px; }
+        .dashboard-container { display: flex; gap: 20px; max-width: 1600px; margin: 0 auto; height: 92vh; }
+        
+        /* Kolom Kiri - Form Parameter */
+        .sidebar-panel { flex: 1; max-width: 400px; background-color: #1e293b; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; }
+        h1 { font-size: 24px; font-weight: 700; margin-top: 0; color: #ff6600; }
+        h1 span { color: #fff; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; font-size: 14px; }
+        select, input[type="radio"] { width: 100%; padding: 10px; background-color: #334155; border: 1px solid #475569; border-radius: 6px; color: #fff; font-family: inherit; }
+        .radio-group { background-color: #334155; padding: 10px; border-radius: 6px; border: 1px solid #475569; }
+        .radio-label { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; color: #e2e8f0; font-size: 14px; }
+        .radio-label input { width: auto; }
+        .btn { width: 100%; padding: 12px; background-color: #ff6600; color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background-color: #e05500; }
+
+        /* Kolom Kanan - Map & Detail Rincian */
+        .main-display { flex: 3; display: flex; flex-direction: column; gap: 20px; }
+        .map-wrapper { flex: 2; background-color: #1e293b; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; min-height: 400px; }
+        
+        /* Bagian Bawah - Tabel Rincian Data */
+        .details-panel { flex: 1.2; background-color: #1e293b; padding: 20px; border-radius: 12px; overflow-y: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .details-panel h3 { margin-top: 0; margin-bottom: 15px; color: #ff6600; font-size: 18px; border-bottom: 2px solid #334155; padding-bottom: 8px; }
+        
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th, td { padding: 10px; border-bottom: 1px solid #334155; }
+        th { color: #94a3b8; font-weight: 600; }
+        .path-text { color: #fdba74; font-family: monospace; font-size: 12px; }
+    </style>
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <h1>Shopee Express <span>Route Optimizer</span></h1>
-            <p>Analisis Jaringan Distribusi Lintas Provinsi Jakarta ke Hub Osowilangun / Gresik</p>
-        </header>
 
-        <main style="max-width: 600px; margin: 0 auto;">
-            <div class="card">
-                <form action="/hitung" method="POST">
+    <div class="dashboard-container">
+        <div class="sidebar-panel">
+            <div>
+                <header>
+                    <h1>Shopee Express <span>Optimizer</span></h1>
+                    <p style="font-size: 12px; color: #94a3b8; margin-bottom: 25px;">Analisis Distribusi Lintas Provinsi Jakarta - Gresik/Surabaya</p>
+                </header>
+                
+                <form id="routeForm">
                     <div class="form-group">
-                        <label for="asal">Pilih Origin Sorting Center (Jakarta):</label>
+                        <label for="asal">Origin Sorting Center (Jakarta):</label>
                         <select name="asal" id="asal">
                             {% for opt in asal_options %}
                             <option value="{{ opt }}">{{ opt.replace('_', ' ') }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
+                    
                     <div class="form-group">
-                        <label for="tujuan">Pilih Destination Distribution Center:</label>
+                        <label for="tujuan">Destination Distribution Center:</label>
                         <select name="tujuan" id="tujuan">
                             {% for opt in tujuan_options %}
                             <option value="{{ opt }}">{{ opt.replace('_', ' ') }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
+                    
                     <div class="form-group">
-                        <label>Kriteria Optimasi Jaringan AI:</label>
+                        <label>Kriteria Optimasi AI Jaringan:</label>
                         <div class="radio-group">
                             <label class="radio-label">
-                                <input type="radio" name="optimasi" value="waktu" checked> Prioritas Waktu Tempuh (Jalur
-                                Tol)
+                                <input type="radio" name="optimasi" value="waktu" checked> Prioritas Waktu Tempuh (Tol)
                             </label>
                             <label class="radio-label">
-                                <input type="radio" name="optimasi" value="biaya"> Prioritas Total Biaya (BBM + Tol)
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label>Simulasi Kondisi Lalu Lintas Jalan:</label>
-                        <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="lalin" value="lancar" checked> Lancar (Normal)
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="lalin" value="macet"> Padat Merayap / Macet (Kecepatan -50%)
+                                <input type="radio" name="optimasi" value="biaya"> Prioritas Total Biaya (BBM)
                             </label>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-top: 15px; margin-bottom: 25px;">
-                        <label>Kondisi Antrean Barang di Drop Center (Node):</label>
-                        <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="gudang" value="normal" checked> Normal (Sesuai Kapasitas)
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="gudang" value="padat"> Overload / Penumpukan (+2 Jam & +Rp500k
-                                per Node)
-                            </label>
-                        </div>
+                        <label for="jam_berangkat">Jam Keberangkatan Armada:</label>
+                        <select name="jam_berangkat" id="jam_berangkat">
+                            <option value="21:00">21:00 WIB (Malam / Lancar x1.0)</option>
+                            <option value="12:00">12:00 WIB (Siang / Sibuk x1.5)</option>
+                            <option value="07:00">07:00 WIB (Pagi / Sibuk x1.5)</option>
+                            <option value="17:00">17:00 WIB (Sore / Macet x2.0)</option>
+                        </select>
                     </div>
+                </div>
+                <button type="submit" class="btn">HITUNG RUTE LOGISTIK</button>
+            </form>
+        </div>
 
-                    <button type="submit" class="btn">HITUNG RUTE LOGISTIK</button>
-                </form>
+        <div class="main-display">
+            <div class="map-wrapper" id="mapContainer">
+                <div style="color: #94a3b8; text-align: center; padding-top: 15%;">Memuat Peta Jaringan Logistik...</div>
             </div>
-        </main>
+            
+            <div class="details-panel">
+                <h3>Rincian Perbandingan Evaluasi Alur Jaringan</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metode/Algoritma</th>
+                            <th>Urutan Node Distribusi yang Dilewati</th>
+                            <th>Jarak</th>
+                            <th>Waktu Tiba</th>
+                            <th>Biaya BBM</th>
+                            <th>Biaya Tol</th>
+                            <th>Total Biaya (BBM+Tol)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultTableBody">
+                        <tr>
+                            <td colspan="7" style="color: #94a3b8; text-align: center;">Silakan klik tombol "Hitung Rute Logistik" untuk memproses data.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</body>
 
+    <script>
+        const form = document.getElementById('routeForm');
+        
+        function kirimDataForm() {
+            const formData = new FormData(form);
+            fetch('/hitung', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // 1. Update Map
+                document.getElementById('mapContainer').innerHTML = data.map_html;
+                
+                // 2. Update Baris Tabel Rincian + Waktu Komputasi Algoritma
+                const tbody = document.getElementById('resultTableBody');
+                tbody.innerHTML = `
+                    <tr style="border-left: 4px solid #ff6600;">
+                        <td>
+                            <strong>A* (Rekomendasi AI)</strong><br>
+                            <small style="color: #94a3b8; font-size: 11px;">Komputasi: ${data.waktu_komputasi_astar} ms</small>
+                        </td>
+                        <td class="path-text">${data.astar.path}</td>
+                        <td>${data.astar.jarak} Km</td>
+                        <td><span style="color: #ff6600; font-weight: bold;">${data.astar.waktu} Jam</span></td>
+                        <td>Rp ${data.astar.bbm.toLocaleString('id-ID')}</td>
+                        <td>Rp ${data.astar.tol.toLocaleString('id-ID')}</td>
+                        <td><strong>Rp ${data.astar.biaya_total.toLocaleString('id-ID')}</strong></td>
+                    </tr>
+                    <tr style="border-left: 4px solid #10b981;">
+                        <td>
+                            Dijkstra (Baseline)<br>
+                            <small style="color: #94a3b8; font-size: 11px;">Komputasi: ${data.waktu_komputasi_dijkstra} ms</small>
+                        </td>
+                        <td class="path-text">${data.dijkstra.path}</td>
+                        <td>${data.dijkstra.jarak} Km</td>
+                        <td>${data.dijkstra.waktu} Jam</td>
+                        <td>Rp ${data.dijkstra.bbm.toLocaleString('id-ID')}</td>
+                        <td>Rp ${data.dijkstra.tol.toLocaleString('id-ID')}</td>
+                        <td>Rp ${data.dijkstra.biaya_total.toLocaleString('id-ID')}</td>
+                    </tr>
+                    <tr style="border-left: 4px solid #dc2626;">
+                        <td>
+                            Rute Riil Shopee SOP<br>
+                            <small style="color: #94a3b8; font-size: 11px;">Komputasi: Statis (Manual)</small>
+                        </td>
+                        <td class="path-text">${data.shopee.path}</td>
+                        <td>${data.shopee.jarak} Km</td>
+                        <td>${data.shopee.waktu} Jam</td>
+                        <td>Rp ${data.shopee.bbm.toLocaleString('id-ID')}</td>
+                        <td>Rp ${data.shopee.tol.toLocaleString('id-ID')}</td>
+                        <td>Rp ${data.shopee.biaya_total.toLocaleString('id-ID')}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Jalankan otomatis saat web pertama kali dibuka
+        window.addEventListener('DOMContentLoaded', kirimDataForm);
+
+        // Jalankan otomatis saat form disubmit
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            kirimDataForm();
+        });
+    </script>
+</body>
 </html>

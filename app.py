@@ -43,7 +43,7 @@ G.add_edge('Semarang_DC', 'Surabaya_Osowilangun_DC', jarak=315, toll_cost=330000
 G.add_edge('Semarang_DC', 'Surabaya_Rungkut_DC', jarak=335, toll_cost=355000, speed=80)
 
 # ==========================================
-# 2. LOGIKA HEURISTIK & MULTIPLIER KONDISI
+# 2. LOGIKA HEURISTIK & MULTIPLIER
 # ==========================================
 def heuristic_haversine(u, v):
     pos_u = G.nodes[u]['pos']
@@ -63,51 +63,45 @@ def heuristic_waktu(u, v):
 def heuristic_biaya(u, v):
     return heuristic_haversine(u, v) * BBM_PER_KM
 
-# Fungsi menghitung detail hasil akhir dengan penambahan kondisi Traffic & Overload
-def hitung_detail_rute(path, status_lalin, status_gudang):
+def get_jam_multiplier(jam_pilihan):
+    # PERBAIKAN: Jam 12:00 tetap ada dengan pengali x1.5
+    multipliers = {
+        '21:00': 1.0,  # Malam (Lancar)
+        '12:00': 1.5,  # Siang (Sibuk)
+        '07:00': 2.0,  # Pagi (Sibuk)
+        '17:00': 2.0   # Sore (Macet)
+    }
+    return multipliers.get(jam_pilihan, 1.0)
+
+def hitung_detail_rute(path, jam_berangkat):
     total_jarak = 0
     total_tol = 0
-    total_waktu = 0
-    total_delay_gudang = 0
-    total_biaya_overload = 0
-    
-    # Menghitung jumlah node transit di tengah perjalanan (bukan asal/tujuan)
-    jumlah_node_transit = max(0, len(path) - 2)
-    
-    if status_gudang == 'padat':
-        total_delay_gudang = jumlah_node_transit * 2        # Tambah 2 jam per node transit
-        total_biaya_overload = jumlah_node_transit * 500000  # Tambah Rp 500.000 per node transit
+    total_waktu_dasar = 0
+    multiplier = get_jam_multiplier(jam_berangkat)
 
     for i in range(len(path) - 1):
         edge_data = G[path[i]][path[i+1]]
         total_jarak += edge_data['jarak']
         total_tol += edge_data['toll_cost']
-        
-        # Pengaruh Traffic pada Kecepatan
-        kecepatan_efektif = edge_data['speed'] * 0.5 if status_lalin == 'macet' else edge_data['speed']
-        total_waktu += edge_data['jarak'] / kecepatan_efektif
+        total_waktu_dasar += edge_data['jarak'] / edge_data['speed']
         
     total_bbm = total_jarak * BBM_PER_KM
-    total_biaya = total_bbm + total_tol + total_biaya_overload
-    total_waktu_akhir = total_waktu + total_delay_gudang
-    
     return {
-        'path': path,
+        'path': " → ".join([n.replace('_', ' ') for n in path]),
+        'path_list': path,
         'jarak': round(total_jarak, 1),
         'tol': total_tol,
         'bbm': total_bbm,
-        'biaya_overload': total_biaya_overload,
-        'biaya_total': total_biaya,
-        'waktu': round(total_waktu_akhir, 2),
-        'delay_gudang': total_delay_gudang
+        'biaya_total': total_bbm + total_tol,
+        'waktu': round(total_waktu_dasar * multiplier, 2)
     }
 
-def hitung_rute_asli_shopee(asal, tujuan, status_lalin, status_gudang):
+def hitung_rute_asli_shopee(asal, tujuan, jam_berangkat):
     if asal in ['Jakarta_Utara_DC', 'Jakarta_Kosambi_DC'] and tujuan == 'Surabaya_Osowilangun_DC':
         path = [asal, 'Cirebon_Transit', 'Tegal_Transit', 'Semarang_DC', 'Tuban_Transit', 'Surabaya_Osowilangun_DC']
     else:
         path = [asal, 'Cirebon_Transit', 'Tegal_Transit', 'Semarang_DC', 'Tuban_Transit', 'Surabaya_Osowilangun_DC', 'Surabaya_Rungkut_DC']
-    return hitung_detail_rute(path, status_lalin, status_gudang)
+    return hitung_detail_rute(path, jam_berangkat)
 
 @app.route('/')
 def index():
@@ -117,55 +111,29 @@ def index():
 
 @app.route('/hitung', methods=['POST'])
 def hitung():
-    asal = request.form.get('asal', 'Jakarta_Utara_DC')
-    tujuan = request.form.get('tujuan', 'Surabaya_Osowilangun_DC')
-    optimasi = request.form.get('optimasi', 'waktu')
+    asal = request.form.get('asal')
+    tujuan = request.form.get('tujuan')
+    optimasi = request.form.get('optimasi')
+    jam_berangkat = request.form.get('jam_berangkat')
     
-    # Menangkap Parameter Simulasi Baru dari Form Parameter
-    status_lalin = request.form.get('lalin', 'lancar')      # lancar / macet
-    status_gudang = request.form.get('gudang', 'normal')    # normal / padat
+    multiplier = get_jam_multiplier(jam_berangkat)
     
-    # Fungsi pembobotan dinamis NetworkX berdasarkan pilihan user
     if optimasi == 'waktu':
-        if status_lalin == 'macet':
-            weight_func = lambda u, v, d: d['jarak'] / (d['speed'] * 0.5)
-        else:
-            weight_func = lambda u, v, d: d['jarak'] / d['speed']
+        weight_func = lambda u, v, d: (d['jarak'] / d['speed']) * multiplier
+        heuristic_func = lambda u, v: (heuristic_haversine(u, v) / MAX_SPEED_GRAPH) * multiplier
     else:
         weight_func = lambda u, v, d: (d['jarak'] * BBM_PER_KM) + d['toll_cost']
+        heuristic_func = heuristic_biaya
         
-    # Eksekusi Algoritma
-    start_dijkstra = time.perf_counter()
+    # Perhitungan Jalur
     path_dijkstra = nx.dijkstra_path(G, source=asal, target=tujuan, weight=weight_func)
-    end_dijkstra = time.perf_counter()
-    waktu_komputasi_dijkstra = (end_dijkstra - start_dijkstra) * 1000
-    
-    heuristic_func = heuristic_waktu if optimasi == 'waktu' else heuristic_biaya
-    start_astar = time.perf_counter()
     path_astar = nx.astar_path(G, source=asal, target=tujuan, heuristic=heuristic_func, weight=weight_func)
-    end_astar = time.perf_counter()
-    waktu_komputasi_astar = (end_astar - start_astar) * 1000
     
-    # Proses Kalkulasi Detail Output
-    detail_astar = hitung_detail_rute(path_astar, status_lalin, status_gudang)
-    detail_dijkstra = hitung_detail_rute(path_dijkstra, status_lalin, status_gudang)
-    detail_shopee = hitung_rute_asli_shopee(asal, tujuan, status_lalin, status_gudang)
+    detail_astar = hitung_detail_rute(path_astar, jam_berangkat)
+    detail_dijkstra = hitung_detail_rute(path_dijkstra, jam_berangkat)
+    detail_shopee = hitung_rute_asli_shopee(asal, tujuan, jam_berangkat)
     
-    return render_template('rute.html', 
-                           optimasi=optimasi, status_lalin=status_lalin, status_gudang=status_gudang,
-                           astar=detail_astar, dijkstra=detail_dijkstra, shopee=detail_shopee,
-                           waktu_astar=round(waktu_komputasi_astar, 4),
-                           waktu_dijkstra=round(waktu_komputasi_dijkstra, 4),
-                           asal=asal, tujuan=tujuan)
-
-@app.route('/peta_render')
-def peta_render():
-    asal = request.args.get('asal', 'Jakarta_Utara_DC')
-    tujuan = request.args.get('tujuan', 'Surabaya_Osowilangun_DC')
-    path_astar = request.args.get('path_astar', '').split(',') if request.args.get('path_astar', '') else []
-    path_dijkstra = request.args.get('path_dijkstra', '').split(',') if request.args.get('path_dijkstra', '') else []
-    path_shopee = request.args.get('path_shopee', '').split(',') if request.args.get('path_shopee', '') else []
-    
+    # Generate Peta Berdasarkan Hasil Perhitungan Terbaru
     google_maps_tiles = 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'
     peta = folium.Map(location=[-6.9932, 110.4203], zoom_start=7, tiles=google_maps_tiles, attr='Google Maps')
     
@@ -174,14 +142,17 @@ def peta_render():
         color = 'green' if node in [asal, tujuan] else 'orange' if not is_transit else 'lightgray'
         folium.Marker(location=coords, popup=node.replace('_', ' '), icon=folium.Icon(color=color, icon='star' if not is_transit else 'circle', prefix='fa')).add_to(peta)
     
-    if path_dijkstra:
-        folium.PolyLine([nodes_coords[n] for n in path_dijkstra if n in nodes_coords], color='#64748b', weight=7, opacity=0.5).add_to(peta)
-    if path_shopee:
-        folium.PolyLine([nodes_coords[n] for n in path_shopee if n in nodes_coords], color='#dc2626', weight=4, opacity=0.8).add_to(peta)
-    if path_astar:
-        folium.PolyLine([nodes_coords[n] for n in path_astar if n in nodes_coords], color='#ff6600', weight=3, opacity=1.0).add_to(peta)
-        
-    return peta._repr_html_()
+    # Gambar garis rute aktif ke peta
+    folium.PolyLine([nodes_coords[n] for n in path_dijkstra if n in nodes_coords], color='#64748b', weight=7, opacity=0.4, tooltip='Dijkstra').add_to(peta)
+    folium.PolyLine([nodes_coords[n] for n in detail_shopee['path_list'] if n in nodes_coords], color='#dc2626', weight=4, opacity=0.7, tooltip='SOP Shopee').add_to(peta)
+    folium.PolyLine([nodes_coords[n] for n in path_astar if n in nodes_coords], color='#ff6600', weight=3, opacity=1.0, tooltip='A*').add_to(peta)
+
+    return jsonify({
+        'map_html': peta._repr_html_(),
+        'astar': detail_astar,
+        'dijkstra': detail_dijkstra,
+        'shopee': detail_shopee
+    })
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
