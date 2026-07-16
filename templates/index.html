@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopee Express Route Optimization</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         :root {
             --shopee-orange: #ee4d2d;
@@ -42,7 +50,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
         }
 
         .header-logo {
@@ -70,7 +78,9 @@
             color: var(--shopee-orange);
         }
 
-        .logo-text span { color: var(--text); }
+        .logo-text span {
+            color: var(--text);
+        }
 
         .header-subtitle {
             font-size: 13px;
@@ -92,7 +102,7 @@
             border: 1px solid var(--border);
             padding: 28px;
             margin-bottom: 24px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
         }
 
         .form-card-title {
@@ -161,7 +171,10 @@
             padding-right: 36px;
         }
 
-        select:focus { outline: none; border-color: var(--shopee-orange); }
+        select:focus {
+            outline: none;
+            border-color: var(--shopee-orange);
+        }
 
         /* Kriteria Radio */
         .radio-row {
@@ -189,7 +202,9 @@
             background: #fff5f3;
         }
 
-        .radio-option input { accent-color: var(--shopee-orange); }
+        .radio-option input {
+            accent-color: var(--shopee-orange);
+        }
 
         /* Submit Button */
         .btn-submit {
@@ -211,12 +226,24 @@
             gap: 8px;
         }
 
-        .btn-submit:hover { background: #d94424; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(238,77,45,0.3); }
-        .btn-submit:active { transform: translateY(0); }
+        .btn-submit:hover {
+            background: #d94424;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
 
         /* ===== HASIL SECTION ===== */
-        .hasil-section { display: none; }
-        .hasil-section.visible { display: block; }
+        .hasil-section {
+            display: none;
+        }
+
+        .hasil-section.visible {
+            display: block;
+        }
 
         /* Dua Kartu Rute */
         .rute-grid {
@@ -231,13 +258,13 @@
             border-radius: 16px;
             border: 2px solid var(--border);
             overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
             transition: box-shadow 0.2s;
         }
 
         .rute-card.recommended {
             border-color: var(--shopee-orange);
-            box-shadow: 0 0 0 3px rgba(238,77,45,0.08), 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.08), 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .rute-card-header {
@@ -248,16 +275,26 @@
             justify-content: space-between;
         }
 
-        .rute-card-header.tol { background: linear-gradient(135deg, #f0fdf4, #dcfce7); }
-        .rute-card-header.arteri { background: linear-gradient(135deg, #eff6ff, #dbeafe); }
+        .rute-card-header.tol {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        }
+
+        .rute-card-header.arteri {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        }
 
         .rute-title {
             font-size: 16px;
             font-weight: 800;
         }
 
-        .rute-title.tol { color: var(--green); }
-        .rute-title.arteri { color: var(--blue); }
+        .rute-title.tol {
+            color: var(--green);
+        }
+
+        .rute-title.arteri {
+            color: var(--blue);
+        }
 
         .badge-rekomendasi {
             background: var(--shopee-orange);
@@ -270,7 +307,9 @@
             letter-spacing: 0.5px;
         }
 
-        .rute-card-body { padding: 18px 20px; }
+        .rute-card-body {
+            padding: 18px 20px;
+        }
 
         .rute-stat-grid {
             display: grid;
@@ -300,7 +339,9 @@
             color: var(--text);
         }
 
-        .rute-stat-value.highlight { color: var(--shopee-orange); }
+        .rute-stat-value.highlight {
+            color: var(--shopee-orange);
+        }
 
         .total-biaya-row {
             background: #fff5f3;
@@ -354,7 +395,7 @@
             border: 1px solid var(--border);
             padding: 22px 24px;
             margin-bottom: 20px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
         }
 
         .algo-card-title {
@@ -400,13 +441,27 @@
             font-weight: 500;
         }
 
-        .algo-table tr:last-child td { border-bottom: none; }
+        .algo-table tr:last-child td {
+            border-bottom: none;
+        }
 
-        .algo-table tr.astar td:first-child { border-left: 3px solid var(--shopee-orange); }
-        .algo-table tr.dijkstra td:first-child { border-left: 3px solid var(--green-light); }
+        .algo-table tr.astar td:first-child {
+            border-left: 3px solid var(--shopee-orange);
+        }
 
-        .method-name { font-weight: 700; }
-        .method-ms { font-size: 11px; color: var(--muted); font-weight: 400; }
+        .algo-table tr.dijkstra td:first-child {
+            border-left: 3px solid var(--green-light);
+        }
+
+        .method-name {
+            font-weight: 700;
+        }
+
+        .method-ms {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 400;
+        }
 
         .path-chip {
             background: #f1f5f9;
@@ -424,7 +479,7 @@
             border-radius: 16px;
             border: 1px solid var(--border);
             overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
 
@@ -470,15 +525,20 @@
             border-radius: 2px;
         }
 
-        #mapContainer { min-height: 450px; }
-        #mapContainer iframe { width: 100% !important; }
+        #mapContainer {
+            min-height: 450px;
+        }
+
+        #mapContainer iframe {
+            width: 100% !important;
+        }
 
         /* Loading state */
         .loading-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(255,255,255,0.7);
+            background: rgba(255, 255, 255, 0.7);
             z-index: 999;
             align-items: center;
             justify-content: center;
@@ -486,7 +546,9 @@
             gap: 12px;
         }
 
-        .loading-overlay.show { display: flex; }
+        .loading-overlay.show {
+            display: flex;
+        }
 
         .spinner {
             width: 40px;
@@ -497,255 +559,288 @@
             animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         @media (max-width: 700px) {
-            .rute-grid { grid-template-columns: 1fr; }
-            .form-grid, .form-row { grid-template-columns: 1fr; }
-            .radio-row { flex-direction: column; }
+            .rute-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid,
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .radio-row {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="loading-overlay" id="loadingOverlay">
-    <div class="spinner"></div>
-    <div style="font-size:14px;font-weight:600;color:#64748b;">Menghitung rute optimal...</div>
-</div>
-
-<!-- Header -->
-<header class="header">
-    <div class="header-logo">
-        <div class="logo-icon">SE</div>
-        <div class="logo-text">Shopee <span>Express</span></div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div style="font-size:14px;font-weight:600;color:#64748b;">Menghitung rute optimal...</div>
     </div>
-    <div class="header-subtitle">Sistem Optimasi Jaringan Distribusi Lintas Provinsi</div>
-</header>
 
-<main class="main">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logo">
+            <div class="logo-icon">SE</div>
+            <div class="logo-text">Shopee <span>Express</span></div>
+        </div>
+        <div class="header-subtitle">Sistem Optimasi Jaringan Distribusi Lintas Provinsi</div>
+    </header>
 
-    <!-- Form -->
-    <div class="form-card">
-        <div class="form-card-title">Parameter Simulasi Rute</div>
-        <form id="routeForm">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="asal">Origin Sorting Center</label>
-                    <select name="asal" id="asal">
-                        {% for opt in asal_options %}
-                        <option value="{{ opt }}">{{ opt.replace('_', ' ') }}</option>
-                        {% endfor %}
+    <main class="main">
+
+        <!-- Form -->
+        <div class="form-card">
+            <div class="form-card-title">Parameter Simulasi Rute</div>
+            <form id="routeForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="asal">Origin Sorting Center</label>
+                        <select name="asal" id="asal">
+                            {% for opt in asal_options %}
+                            <option value="{{ opt }}">{{ opt.replace('_', ' ') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tujuan">Destination Distribution Center</label>
+                        <select name="tujuan" id="tujuan">
+                            {% for opt in tujuan_options %}
+                            <option value="{{ opt }}">{{ opt.replace('_', ' ') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label>Kriteria Prioritas Kurir</label>
+                    <div class="radio-row">
+                        <label class="radio-option">
+                            <input type="radio" name="optimasi" value="waktu" checked>
+                            ⚡ Waktu Tercepat
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="optimasi" value="biaya">
+                            💰 Biaya Termurah
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label for="jam_berangkat">Jam Keberangkatan Armada</label>
+                    <select name="jam_berangkat" id="jam_berangkat">
+                        <option value="21:00">21:00 WIB — Malam / Lancar (×1.0)</option>
+                        <option value="12:00">12:00 WIB — Siang / Sibuk (×1.5)</option>
+                        <option value="07:00">07:00 WIB — Pagi / Sibuk (×1.5)</option>
+                        <option value="17:00">17:00 WIB — Sore / Macet (×2.0)</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="tujuan">Destination Distribution Center</label>
-                    <select name="tujuan" id="tujuan">
-                        {% for opt in tujuan_options %}
-                        <option value="{{ opt }}">{{ opt.replace('_', ' ') }}</option>
-                        {% endfor %}
-                    </select>
+
+                <button type="submit" class="btn-submit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    HITUNG &amp; BANDINGKAN RUTE
+                </button>
+            </form>
+        </div>
+
+        <!-- Output Section -->
+        <div class="hasil-section" id="hasilSection">
+
+            <!-- Dua Kartu Rute -->
+            <div class="rute-grid">
+
+                <!-- Kartu Tol (Hijau) -->
+                <div class="rute-card" id="cardTol">
+                    <div class="rute-card-header tol">
+                        <div class="rute-title tol">Jalur Tol (Rute Hijau)</div>
+                        <div id="badgeTol"></div>
+                    </div>
+                    <div class="rute-card-body">
+                        <div class="rute-stat-grid">
+                            <div class="rute-stat">
+                                <div class="rute-stat-label">Total Jarak</div>
+                                <div class="rute-stat-value" id="tol-jarak">—</div>
+                            </div>
+                            <div class="rute-stat">
+                                <div class="rute-stat-label">Estimasi Waktu</div>
+                                <div class="rute-stat-value highlight" id="tol-waktu">—</div>
+                            </div>
+                            <div class="rute-stat">
+                                <div class="rute-stat-label">Biaya BBM</div>
+                                <div class="rute-stat-value" id="tol-bbm">—</div>
+                            </div>
+                            <div class="rute-stat">
+                                <div class="rute-stat-label">Tarif Tol</div>
+                                <div class="rute-stat-value" id="tol-tol">—</div>
+                            </div>
+                        </div>
+                        <div class="total-biaya-row">
+                            <div class="total-biaya-label">Total Biaya</div>
+                            <div class="total-biaya-value" id="tol-total">—</div>
+                        </div>
+                        <div class="urutan-hub">
+                            <div class="urutan-hub-label">Urutan Hub</div>
+                            <div class="urutan-hub-text" id="tol-path">—</div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Kartu Arteri (Biru) -->
+                <div class="rute-card" id="cardArteri">
+                    <div class="rute-card-header arteri">
+                        <div class="rute-title arteri">Jalur Arteri / Non-Tol (Rute Biru)</div>
+                        <div id="badgeArteri"></div>
+                    </div>
+                    <div class="rute-card-body">
+                        <div class="rute-stat-grid">
+                            <div class="rute-stat">
+                                <div class="rute-stat-label">Total Jarak</div>
+                                <div class="rute-stat-value" id="arteri-jarak">—</div>
+                            </div>
+                            <div class="rute-stat">
+                                <div class="rute-stat-label">Estimasi Waktu</div>
+                                <div class="rute-stat-value highlight" id="arteri-waktu">—</div>
+                            </div>
+                            <div class="rute-stat">
+                                <div class="rute-stat-label">Biaya BBM</div>
+                                <div class="rute-stat-value" id="arteri-bbm">—</div>
+                            </div>
+                            <div class="rute-stat">
+                                <div class="rute-stat-label">Tarif Tol</div>
+                                <div class="rute-stat-value" id="arteri-tol">—</div>
+                            </div>
+                        </div>
+                        <div class="total-biaya-row">
+                            <div class="total-biaya-label">Total Biaya</div>
+                            <div class="total-biaya-value" id="arteri-total">—</div>
+                        </div>
+                        <div class="urutan-hub">
+                            <div class="urutan-hub-label">Urutan Hub</div>
+                            <div class="urutan-hub-text" id="arteri-path">—</div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="form-group" style="margin-bottom:16px;">
-                <label>Kriteria Prioritas Kurir</label>
-                <div class="radio-row">
-                    <label class="radio-option">
-                        <input type="radio" name="optimasi" value="waktu" checked>
-                        ⚡ Waktu Tercepat
-                    </label>
-                    <label class="radio-option">
-                        <input type="radio" name="optimasi" value="biaya">
-                        💰 Biaya Termurah
-                    </label>
+            <!-- Peta -->
+            <div class="map-card">
+                <div class="map-header">Peta Jaringan Distribusi</div>
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-line" style="background:#22c55e;"></div>
+                        Jalur Tol (Hijau)
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background:#3b82f6;"></div>
+                        Jalur Arteri Non-Tol (Biru)
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background:#ff6600;"></div>
+                        A* Rekomendasi AI (Oranye)
+                    </div>
                 </div>
+                <div id="mapContainer"></div>
             </div>
 
-            <div class="form-group" style="margin-bottom:20px;">
-                <label for="jam_berangkat">Jam Keberangkatan Armada</label>
-                <select name="jam_berangkat" id="jam_berangkat">
-                    <option value="21:00">21:00 WIB — Malam / Lancar (×1.0)</option>
-                    <option value="12:00">12:00 WIB — Siang / Sibuk (×1.5)</option>
-                    <option value="07:00">07:00 WIB — Pagi / Sibuk (×1.5)</option>
-                    <option value="17:00">17:00 WIB — Sore / Macet (×2.0)</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn-submit">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                HITUNG &amp; BANDINGKAN RUTE
-            </button>
-        </form>
-    </div>
-
-    <!-- Output Section -->
-    <div class="hasil-section" id="hasilSection">
-
-        <!-- Dua Kartu Rute -->
-        <div class="rute-grid">
-
-            <!-- Kartu Tol (Hijau) -->
-            <div class="rute-card" id="cardTol">
-                <div class="rute-card-header tol">
-                    <div class="rute-title tol">Jalur Tol (Rute Hijau)</div>
-                    <div id="badgeTol"></div>
-                </div>
-                <div class="rute-card-body">
-                    <div class="rute-stat-grid">
-                        <div class="rute-stat">
-                            <div class="rute-stat-label">Total Jarak</div>
-                            <div class="rute-stat-value" id="tol-jarak">—</div>
-                        </div>
-                        <div class="rute-stat">
-                            <div class="rute-stat-label">Estimasi Waktu</div>
-                            <div class="rute-stat-value highlight" id="tol-waktu">—</div>
-                        </div>
-                        <div class="rute-stat">
-                            <div class="rute-stat-label">Biaya BBM</div>
-                            <div class="rute-stat-value" id="tol-bbm">—</div>
-                        </div>
-                        <div class="rute-stat">
-                            <div class="rute-stat-label">Tarif Tol</div>
-                            <div class="rute-stat-value" id="tol-tol">—</div>
-                        </div>
-                    </div>
-                    <div class="total-biaya-row">
-                        <div class="total-biaya-label">Total Biaya</div>
-                        <div class="total-biaya-value" id="tol-total">—</div>
-                    </div>
-                    <div class="urutan-hub">
-                        <div class="urutan-hub-label">Urutan Hub</div>
-                        <div class="urutan-hub-text" id="tol-path">—</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kartu Arteri (Biru) -->
-            <div class="rute-card" id="cardArteri">
-                <div class="rute-card-header arteri">
-                    <div class="rute-title arteri">Jalur Arteri / Non-Tol (Rute Biru)</div>
-                    <div id="badgeArteri"></div>
-                </div>
-                <div class="rute-card-body">
-                    <div class="rute-stat-grid">
-                        <div class="rute-stat">
-                            <div class="rute-stat-label">Total Jarak</div>
-                            <div class="rute-stat-value" id="arteri-jarak">—</div>
-                        </div>
-                        <div class="rute-stat">
-                            <div class="rute-stat-label">Estimasi Waktu</div>
-                            <div class="rute-stat-value highlight" id="arteri-waktu">—</div>
-                        </div>
-                        <div class="rute-stat">
-                            <div class="rute-stat-label">Biaya BBM</div>
-                            <div class="rute-stat-value" id="arteri-bbm">—</div>
-                        </div>
-                        <div class="rute-stat">
-                            <div class="rute-stat-label">Tarif Tol</div>
-                            <div class="rute-stat-value" id="arteri-tol">—</div>
-                        </div>
-                    </div>
-                    <div class="total-biaya-row">
-                        <div class="total-biaya-label">Total Biaya</div>
-                        <div class="total-biaya-value" id="arteri-total">—</div>
-                    </div>
-                    <div class="urutan-hub">
-                        <div class="urutan-hub-label">Urutan Hub</div>
-                        <div class="urutan-hub-text" id="arteri-path">—</div>
-                    </div>
+            <!-- Tabel Perbandingan Algoritma -->
+            <div class="algo-card">
+                <div class="algo-card-title">Perbandingan Evaluasi Algoritma Pencarian</div>
+                <div style="overflow-x:auto;">
+                    <table class="algo-table">
+                        <thead>
+                            <tr>
+                                <th>Metode / Algoritma</th>
+                                <th>Urutan Node Distribusi</th>
+                                <th>Jarak</th>
+                                <th>Waktu Tiba</th>
+                                <th>Biaya BBM</th>
+                                <th>Biaya Tol</th>
+                                <th>Total Biaya</th>
+                            </tr>
+                        </thead>
+                        <tbody id="algoTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center;color:#94a3b8;padding:20px;">
+                                    Klik tombol di atas untuk memulai analisis.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
         </div>
+    </main>
 
-        <!-- Peta -->
-        <div class="map-card">
-            <div class="map-header">Peta Jaringan Distribusi</div>
-            <div class="map-legend">
-                <div class="legend-item">
-                    <div class="legend-line" style="background:#22c55e;"></div>
-                    Jalur Tol (Hijau)
-                </div>
-                <div class="legend-item">
-                    <div class="legend-line" style="background:#3b82f6;"></div>
-                    Jalur Arteri Non-Tol (Biru)
-                </div>
-                <div class="legend-item">
-                    <div class="legend-line" style="background:#ff6600;"></div>
-                    A* Rekomendasi AI (Oranye)
-                </div>
-            </div>
-            <div id="mapContainer"></div>
-        </div>
+    <script>
+        const form = document.getElementById('routeForm');
+        const idr = v => 'Rp ' + Number(v).toLocaleString('id-ID');
 
-        <!-- Tabel Perbandingan Algoritma -->
-        <div class="algo-card">
-            <div class="algo-card-title">Perbandingan Evaluasi Algoritma Pencarian</div>
-            <div style="overflow-x:auto;">
-                <table class="algo-table">
-                    <thead>
-                        <tr>
-                            <th>Metode / Algoritma</th>
-                            <th>Urutan Node Distribusi</th>
-                            <th>Jarak</th>
-                            <th>Waktu Tiba</th>
-                            <th>Biaya BBM</th>
-                            <th>Biaya Tol</th>
-                            <th>Total Biaya</th>
-                        </tr>
-                    </thead>
-                    <tbody id="algoTableBody">
-                        <tr>
-                            <td colspan="7" style="text-align:center;color:#94a3b8;padding:20px;">
-                                Klik tombol di atas untuk memulai analisis.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        function formatWaktu(totalJam) {
+            const jamBulat = Math.floor(totalJam);
+            const menit = Math.round((totalJam - jamBulat) * 60);
+            const hari = Math.floor(jamBulat / 24);
+            const sisaJam = jamBulat % 24;
 
-    </div>
-</main>
+            let bagianJam = `${sisaJam} Jam`;
+            if (menit > 0) bagianJam += ` ${menit} Menit`;
 
-<script>
-    const form = document.getElementById('routeForm');
-    const idr = v => 'Rp ' + Number(v).toLocaleString('id-ID');
+            if (hari > 0) {
+                return `${hari} Hari ${bagianJam}<br><span style="font-weight:500;color:var(--muted);font-size:11px;">(${totalJam} Jam total)</span>`;
+            }
+            return `${bagianJam}`;
+        }
 
-    function updateKartu(prefix, data) {
-        document.getElementById(`${prefix}-jarak`).textContent = data.jarak + ' KM';
-        document.getElementById(`${prefix}-waktu`).textContent = data.waktu + ' Jam';
-        document.getElementById(`${prefix}-bbm`).textContent = idr(data.bbm);
-        document.getElementById(`${prefix}-tol`).textContent = idr(data.tol);
-        document.getElementById(`${prefix}-total`).textContent = idr(data.biaya_total);
-        document.getElementById(`${prefix}-path`).textContent = data.path;
-    }
+        function updateKartu(prefix, data) {
+            document.getElementById(`${prefix}-jarak`).textContent = data.jarak + ' KM';
+            document.getElementById(`${prefix}-waktu`).innerHTML = formatWaktu(data.waktu);
+            document.getElementById(`${prefix}-bbm`).textContent = idr(data.bbm);
+            document.getElementById(`${prefix}-tol`).textContent = idr(data.tol);
+            document.getElementById(`${prefix}-total`).textContent = idr(data.biaya_total);
+            document.getElementById(`${prefix}-path`).textContent = data.path;
+        }
 
-    function kirimDataForm() {
-        document.getElementById('loadingOverlay').classList.add('show');
+        function kirimDataForm() {
+            document.getElementById('loadingOverlay').classList.add('show');
 
-        const formData = new FormData(form);
-        fetch('/hitung', { method: 'POST', body: formData })
-        .then(r => r.json())
-        .then(data => {
-            document.getElementById('loadingOverlay').classList.remove('show');
-            document.getElementById('hasilSection').classList.add('visible');
+            const formData = new FormData(form);
+            fetch('/hitung', { method: 'POST', body: formData })
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('loadingOverlay').classList.remove('show');
+                    document.getElementById('hasilSection').classList.add('visible');
 
-            // Update kartu tol & arteri
-            updateKartu('tol', data.tol);
-            updateKartu('arteri', data.arteri);
+                    // Update kartu tol & arteri
+                    updateKartu('tol', data.tol);
+                    updateKartu('arteri', data.arteri);
 
-            // Tandai rekomendasi
-            document.getElementById('cardTol').classList.toggle('recommended', data.rekomendasi === 'tol');
-            document.getElementById('cardArteri').classList.toggle('recommended', data.rekomendasi === 'arteri');
-            document.getElementById('badgeTol').innerHTML = data.rekomendasi === 'tol' ? '<span class="badge-rekomendasi">✓ Rekomendasi</span>' : '';
-            document.getElementById('badgeArteri').innerHTML = data.rekomendasi === 'arteri' ? '<span class="badge-rekomendasi">✓ Rekomendasi</span>' : '';
+                    // Tandai rekomendasi
+                    document.getElementById('cardTol').classList.toggle('recommended', data.rekomendasi === 'tol');
+                    document.getElementById('cardArteri').classList.toggle('recommended', data.rekomendasi === 'arteri');
+                    document.getElementById('badgeTol').innerHTML = data.rekomendasi === 'tol' ? '<span class="badge-rekomendasi">✓ Rekomendasi</span>' : '';
+                    document.getElementById('badgeArteri').innerHTML = data.rekomendasi === 'arteri' ? '<span class="badge-rekomendasi">✓ Rekomendasi</span>' : '';
 
-            // Update peta
-            document.getElementById('mapContainer').innerHTML = data.map_html;
+                    // Update peta
+                    document.getElementById('mapContainer').innerHTML = data.map_html;
 
-            // Update tabel algoritma
-            document.getElementById('algoTableBody').innerHTML = `
+                    // Update tabel algoritma
+                    document.getElementById('algoTableBody').innerHTML = `
                 <tr class="astar">
                     <td>
                         <div class="method-name">A* (Rekomendasi AI)</div>
@@ -753,7 +848,7 @@
                     </td>
                     <td><div class="path-chip">${data.astar.path}</div></td>
                     <td>${data.astar.jarak} Km</td>
-                    <td style="color:var(--shopee-orange);font-weight:700;">${data.astar.waktu} Jam</td>
+                    <td style="color:var(--shopee-orange);font-weight:700;">${formatWaktu(data.astar.waktu)}</td>
                     <td>${idr(data.astar.bbm)}</td>
                     <td>${idr(data.astar.tol)}</td>
                     <td><strong>${idr(data.astar.biaya_total)}</strong></td>
@@ -765,23 +860,24 @@
                     </td>
                     <td><div class="path-chip">${data.dijkstra.path}</div></td>
                     <td>${data.dijkstra.jarak} Km</td>
-                    <td>${data.dijkstra.waktu} Jam</td>
+                    <td>${formatWaktu(data.dijkstra.waktu)}</td>
                     <td>${idr(data.dijkstra.bbm)}</td>
                     <td>${idr(data.dijkstra.tol)}</td>
                     <td>${idr(data.dijkstra.biaya_total)}</td>
                 </tr>
             `;
-        })
-        .catch(() => {
-            document.getElementById('loadingOverlay').classList.remove('show');
-        });
-    }
+                })
+                .catch(() => {
+                    document.getElementById('loadingOverlay').classList.remove('show');
+                });
+        }
 
-    window.addEventListener('DOMContentLoaded', kirimDataForm);
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        kirimDataForm();
-    });
-</script>
+        window.addEventListener('DOMContentLoaded', kirimDataForm);
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            kirimDataForm();
+        });
+    </script>
 </body>
+
 </html>
