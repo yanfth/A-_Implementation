@@ -516,11 +516,30 @@
         }
 
         #mapContainer {
-            min-height: 450px;
+            height: 400px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Override folium's default aspect ratio container */
+        #mapContainer > div,
+        #mapContainer > div > div {
+            height: 100% !important;
+            padding-bottom: 0 !important;
         }
 
         #mapContainer iframe {
             width: 100% !important;
+            height: 100% !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+
+        @media (min-width: 768px) {
+            #mapContainer {
+                height: 500px;
+            }
         }
 
         /* Loading state */
